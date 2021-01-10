@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ADMIN ページ</title>
+<th:block th:replace="common/head :: head_fragment"/>
+</head>
+<body>
+  <div th:replace="common/header :: header_fragment"></div>
+  <h1>Admin</h1>
+  <h2 class="margin_1">
+    [[${message}]]
+  </h2>
+  <p class="margin_1">
+    ユーザ一覧
+  </p>
+  <table class="table margin_1 width_80">
+    <thead>
+      <tr>
+        <th>項番</th>
+        <th>ユーザ名</th>
+        <th>管理者</th>
+        <th>ステータス</th>
+        <th>削除</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="user, status:${userList}">
+        <td>[[${status.count}]]</td>
+        <td>[[${user.username}]]</td>
+        <td>[[${user.adminflg == '1' ? '○' : ''}]]</td>
+        <td>[[${user.enabledflg == '1' ? '有効' : '無効'}]]</td>
+        <td><a class="btn btn-danger" th:href="@{/admin/delete(username=${user.username})}">削除</a></td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

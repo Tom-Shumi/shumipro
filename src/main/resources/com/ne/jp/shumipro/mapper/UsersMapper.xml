@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ne.jp.shumipro.mapper.UsersMapper">
+
+    <select id="getUsersAll" resultType="com.ne.jp.shumipro.security.UserAuth">
+        SELECT username, password, enabledflg, adminflg FROM users
+    </select>
+</mapper>

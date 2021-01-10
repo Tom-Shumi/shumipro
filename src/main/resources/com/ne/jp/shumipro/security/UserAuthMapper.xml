@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ne.jp.shumipro.security.UserAuthMapper">
+
+    <select id="findByUsername" resultType="com.ne.jp.shumipro.security.UserAuth">
+        SELECT username, password, enabledflg, adminflg FROM users WHERE username = #{username}
+    </select>
+    <insert id="create" parameterType="com.ne.jp.shumipro.security.UserAuth">
+        INSERT INTO users ( username, password, enabledflg, adminflg )
+        VALUES (#{username}, #{password}, '1', '0')
+    </insert>
+    <update id="update" parameterType="com.ne.jp.shumipro.security.UserAuth">
+        UPDATE users SET enabledflg = #{enabledflg}, adminflg = #{adminflg}
+        WHERE username = #{username}
+    </update>
+    <delete id="delete" parameterType="string">
+    	DELETE FROM users WHERE username = #{username}
+    </delete>
+</mapper>
