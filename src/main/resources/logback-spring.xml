@@ -13,7 +13,7 @@
 
     <!--product環境用設定 -->
     <springProfile name="product">
-        <property name="LOG_FILE" value="/home/app_admin/shumipro/shumipro/logs/shumipro.log" />
+        <property name="LOG_FILE" value="/opt/tomcat-9/logs/shumipro.log" />
     </springProfile>
 
   　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
