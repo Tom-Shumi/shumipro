@@ -6,6 +6,11 @@ plugins {
 	id 'jacoco'
 }
 
+war {
+	enabled = true
+	archiveName 'shumipro.war'
+}
+
 group = 'com.ne.jp'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
@@ -59,4 +64,68 @@ test {
 		// 例外発生時の出力設定 (TestExceptionFormat)
 		exceptionFormat 'full'
 	}
+}
+// 設定ファイル環境ごとに切り替え
+// 各ファイル名
+def templateFile = 'application_template.properties'
+def configFile = 'application.properties'
+// 対象の環境名（後に値を代入する）
+def targetEnv = ''
+
+task replaceConfig {
+	description 'Replace application.properties environment.'
+
+	doLast {
+		println 'start replacing :' + targetEnv
+		// コピー実行部分
+		copy {
+			// from: コピーするファイルのあるディレクトリを指定する
+			from 'src/main/resources'
+			// include: 今回はコピーするファイル名を指定している
+			include templateFile
+			// into: コピー先のディレクトリ
+			into 'src/main/resources'
+			// application.propertiesにリネームする
+			rename(templateFile, configFile)
+
+			// ${buildEnv}を置き換える
+			expand([
+					buildEnv: targetEnv
+			])
+			println "replacing finished"
+		}
+	}
+	// 置き換えタスクが終了したらwarコマンドでwar出力する（jarファイルならjarにする）
+	finalizedBy {
+		war
+	}
+}
+
+task warProduct {
+	// groupを設定することで Gradle Tasksビューのbuildの中に表示される
+	group = 'build'
+	description 'Create war file for product environment.'
+
+	doLast {
+		// targetEnvを設定する
+		targetEnv = 'product'
+	}
+	// targetEnv設定後、replaceConfigタスクを実行する
+	finalizedBy {
+		replaceConfig
+	}
+}
+
+// devもProductと同様
+task warDev {
+	group = 'build'
+	description 'Create war file for dev environment.'
+
+	doLast {
+		targetEnv = 'dev'
+	}
+	finalizedBy {
+		replaceConfig
+	}
+
 }
