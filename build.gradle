@@ -80,7 +80,7 @@ task replaceConfig {
 		// コピー実行部分
 		copy {
 			// from: コピーするファイルのあるディレクトリを指定する
-			from 'src/main/resources'
+			from '.'
 			// include: 今回はコピーするファイル名を指定している
 			include templateFile
 			// into: コピー先のディレクトリ
