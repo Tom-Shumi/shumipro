@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
     <timestamp key="LOG_DATE" datePattern="yyyyMMdd"/>
-    <property name="LOG_FILE" value="/Users/shumiya/Desktop/dev/logs/shumipro.log" />
+
+    <!--dev環境用設定 -->
+    <springProfile name="dev">
+        <property name="LOG_FILE" value="/Users/shumiya/Desktop/dev/logs/shumipro.log" />
+    </springProfile>
+
+    <!--product環境用設定 -->
+    <springProfile name="product">
+        <property name="LOG_FILE" value="/home/app_admin/shumipro/shumipro/logs" />
+    </springProfile>
+
   　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     　　<encoder>
       　　<pattern>%date{yyyy-MM-dd HH:mm:ss} [%thread] %level %logger{0} - %msg \(%file:%line\)%n</pattern>
