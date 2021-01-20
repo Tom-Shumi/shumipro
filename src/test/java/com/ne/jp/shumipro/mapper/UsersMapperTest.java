@@ -6,8 +6,10 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import com.ne.jp.shumipro.ShumiProjectApplication;
+import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestExecutionListeners;

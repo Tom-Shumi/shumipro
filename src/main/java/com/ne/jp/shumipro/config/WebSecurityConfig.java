@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     		.and()
     		.sessionManagement()
     			.maximumSessions(1)
-    			.maxSessionsPreventsLogin(true);
+    			.maxSessionsPreventsLogin(false);
     	http.logout()
     		//.logoutSuccessUrl("/loginForm?logout")
     		.logoutUrl("/logout")
