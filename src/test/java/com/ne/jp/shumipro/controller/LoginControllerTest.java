@@ -5,12 +5,8 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.forwardedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Test;
@@ -96,7 +92,6 @@ public class LoginControllerTest {
     @Test
     @DatabaseSetup(value = "/testData/")
     @ExpectedDatabase(value = "/POST/create/", assertionMode=DatabaseAssertionMode.NON_STRICT)
-//    @ExpectedDatabase(value = "/POST/create/", table="users")
     public void 登録処理で新規ユーザがDBへ登録される() throws Exception {
 
         this.mockMvc.perform(post("/loginForm/registUser")
@@ -105,6 +100,29 @@ public class LoginControllerTest {
             .param("password", "test")
             .param("adminflg", "0"));
     }
+
+    @Test
+    @DatabaseSetup(value = "/testData/")
+    @ExpectedDatabase(value = "/CRUD/update/", assertionMode=DatabaseAssertionMode.NON_STRICT)
+    public void 更新処理で既存ユーザのレコードが更新される() throws Exception{
+        this.mockMvc.perform(post("/loginForm/registUser")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "test")
+                .param("password", "test")
+                .param("adminflg", "1"));
+    }
+
+    @Test
+    @DatabaseSetup(value = "/testData/")
+    public void 登録処理でユーザ名をNULLにするとエラーとなる() throws Exception{
+        this.mockMvc.perform(post("/loginForm/registUser")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "")
+                .param("password", "test")
+                .param("adminflg", "1"))
+                .andExpect(flash().attribute("result_message", "失敗しました"));
+    }
+
     
     @Test
     @DatabaseSetup(value = "/testData/")

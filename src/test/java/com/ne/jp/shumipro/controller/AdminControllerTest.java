@@ -103,8 +103,7 @@ public class AdminControllerTest {
     @WithMockCustomUser(username="test", password="test")
     public void test4_一般のユーザは管理者画面へURL直打ちで遷移できない() throws Exception {
         this.mockMvc.perform(post("/admin"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("http://localhost/loginForm"));
+                .andExpect(status().is4xxClientError());
     }
 
     @Test
