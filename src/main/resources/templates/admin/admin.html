@@ -30,7 +30,11 @@
         <td>[[${user.username}]]</td>
         <td>[[${user.adminflg == '1' ? '○' : ''}]]</td>
         <td>[[${user.enabledflg == '1' ? '有効' : '無効'}]]</td>
-        <td><a class="btn btn-danger" th:href="@{/admin/delete(username=${user.username})}">削除</a></td>
+        <td>
+          <th:block th:unless="${loginUsername == user.username}">
+            <a class="btn btn-danger" th:href="@{/admin/delete(username=${user.username})}">削除</a>
+          </th:block>
+        </td>
       </tr>
     </tbody>
   </table>

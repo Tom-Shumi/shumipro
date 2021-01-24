@@ -10,14 +10,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.github.springtestdbunit.DbUnitTestExecutionListener;
 import com.github.springtestdbunit.annotation.DatabaseSetup;
 import com.github.springtestdbunit.annotation.DbUnitConfiguration;
+import com.ne.jp.shumipro.component.SessionData;
 import com.ne.jp.shumipro.mapper.UsersMapper;
 import com.ne.jp.shumipro.security.UserAuth;
 import com.ne.jp.shumipro.security.UserAuthMapper;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import com.ne.jp.shumipro.util.WebContextTestExecutionListener;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,8 @@ import java.util.List;
         DependencyInjectionTestExecutionListener.class,
         TransactionalTestExecutionListener.class,
         DbUnitTestExecutionListener.class,
-        WithSecurityContextTestExecutionListener.class
+        WithSecurityContextTestExecutionListener.class,
+        WebContextTestExecutionListener.class
 })
 @ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
@@ -62,6 +63,14 @@ public class AdminControllerTest {
 
     @Autowired
     private UsersMapper usersMapper;
+
+    @Autowired
+    SessionData sessionData;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        sessionData.setUsername("shumiya");
+    }
 
     @AfterEach
     public void doAfter() throws Exception {
@@ -87,7 +96,8 @@ public class AdminControllerTest {
                 .andExpect(model().attribute("userList", containsInAnyOrder(
                         hasProperty("username", is("shumiya"))
                         , hasProperty("username", is("test")))))
-                .andExpect(model().attribute("userList", hasSize(2)));
+                .andExpect(model().attribute("userList", hasSize(2)))
+                .andExpect(model().attribute("loginUsername", "shumiya"));
     }
 
     @Test
@@ -132,5 +142,21 @@ public class AdminControllerTest {
         // 削除されたレコードが正しいか
         assertThat(userList.get(0).getUsername(), is("shumiya"));
     }
+
+    @Test
+    @DatabaseSetup(value = "/testData/")
+    @WithMockCustomUser(username="shumiya", password="shumiya")
+    public void test7_ログインユーザのユーザ削除処理は失敗する() throws Exception {
+        this.mockMvc.perform(post("/admin/delete?username=shumiya")
+                .with(SecurityMockMvcRequestPostProcessors.csrf()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("message", "削除に失敗しました"))
+                .andExpect(redirectedUrl("/admin"));
+
+        List<UserAuth> userList = usersMapper.getUsersAll();
+        // 削除が行われていないことを確認
+        assertThat(userList.size(), is(2));
+    }
+
 
 }

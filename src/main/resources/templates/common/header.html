@@ -1,6 +1,9 @@
-<header xmlns:th="http://www.thymeleaf.org" th:fragment="header_fragment">
+<header xmlns:th="http://www.thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+        th:fragment="header_fragment">
   <form method="POST">
 	  ShumiPro ヘッダー
+      ■ログインユーザ名：<span sec:authentication="principal.username"></span>
 	  <button type="submit" class="btn btn-danger" th:formaction="@{/logout}">logout</button>
   </form>
 </header>

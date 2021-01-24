@@ -103,6 +103,18 @@ public class LoginControllerTest {
 
     @Test
     @DatabaseSetup(value = "/testData/")
+    @ExpectedDatabase(value = "/POST/create/", assertionMode=DatabaseAssertionMode.NON_STRICT)
+    public void 登録処理でadminflgをnullで登録する() throws Exception {
+
+        this.mockMvc.perform(post("/loginForm/registUser")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("username", "test2")
+                .param("password", "test")
+                .param("adminflg", ""));
+    }
+
+    @Test
+    @DatabaseSetup(value = "/testData/")
     @ExpectedDatabase(value = "/CRUD/update/", assertionMode=DatabaseAssertionMode.NON_STRICT)
     public void 更新処理で既存ユーザのレコードが更新される() throws Exception{
         this.mockMvc.perform(post("/loginForm/registUser")

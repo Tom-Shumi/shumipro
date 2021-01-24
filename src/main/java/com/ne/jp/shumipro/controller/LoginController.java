@@ -33,7 +33,7 @@ public class LoginController {
 	
 	@RequestMapping("")
     public String loginForm(Model model) {
-		// 試験用に追記　start
+		// test用　start
         // ユーザリスト まずは手動で生成
         List<UserAuth> userList = new ArrayList<UserAuth>();
 
@@ -65,14 +65,14 @@ public class LoginController {
         loginForm.setUserList(userAuthList);
         model.addAttribute("loginForm", loginForm);
 
-		// 試験用に追記 end
+		// test用 end
         return "loginForm";
     }
     
     @RequestMapping("/registUser")
     public String registUser(RedirectAttributes redirectAttrs, @ModelAttribute("loginForm") LoginForm form,  Model model) {
     	
-    	logger.info("[ユーザ名:" + form.getUsername() + "] [パスワード:" + form.getPassword() + "] [管理者フラグ" + form.getAdminflg() + "]");
+    	logger.info("[ユーザ名:" + form.getUsername() + "] [パスワード:" + form.getPassword() + "] [管理者フラグ:" + form.getAdminflg() + "]");
     	
     	String password = passwordEncoder.encode(form.getPassword());
     	String adminflg = form.getAdminflg() == null ? "0" : "1";
