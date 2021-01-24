@@ -9,12 +9,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 
 public class ShumiproLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler implements LogoutSuccessHandler {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 	
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -25,6 +28,6 @@ public class ShumiproLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler 
         	logger.info("ログアウト");
         }
         response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect("/loginForm?logout");
+        redirectStrategy.sendRedirect(request, response, "/loginForm?logout");
     }
 }
